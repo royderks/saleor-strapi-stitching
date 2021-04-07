@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "name": "products",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "descriptionShort": {
+      "type": "text"
+    },
+    "slug": {
+      "type": "uid"
+    },
+    "saleorId": {
+      "type": "string"
+    }
+  }
+}
