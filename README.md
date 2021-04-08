@@ -6,7 +6,11 @@ The code in this project shows how you can do schema stitching between two headl
 
 ## Getting Started
 
-This project consists of both a "client" set up with Next.js and an instance of Strapi, which can be found in `/services/cms`. To use schema stitching you need to run both the Next.js application and the local Strapi instance using:
+This project consists of a "client" set up with Next.js and uses headless GraphQL APIs from Saleor and Strapi. Copy the file `.env.sample` to a new file called `.env` and add the GraphQL endpoints of these projects to it.
+
+Make sure to add the model `Products` to Strapi, and add the following fields: `title`, `description` and `saleorId`. This last one is added to make the connection with Saleor. After adding the model, make it public and add some sample data - including a working reference to an ID in Saleor.
+
+You can then start the project with:
 
 ```bash
 npm run dev
@@ -14,9 +18,7 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application, and [http://localhost:3000/api/graphql](http://localhost:3000/api/graphql) to see the GraphQL server with the combined schemas from Saleor and Strapi. Also, the Strapi instance has become available at http://localhost:1337 and the admin at http://localhost:1337/admin.
-
-You can also start the Next.js application and Strapi instance individually with the commands: `npm run dev-nextjs` and `npm run dev-strapi`.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application, and [http://localhost:3000/api/graphql](http://localhost:3000/api/graphql) to see the GraphQL server with the combined schemas from Saleor and Strapi. 
 
 ## Example query
 

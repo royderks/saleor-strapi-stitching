@@ -1,4 +1,4 @@
-import { ApolloServer, makeExecutableSchema } from 'apollo-server-micro';
+import { ApolloServer } from 'apollo-server-micro';
 import { stitchSchemas } from '@graphql-tools/stitch';
 import { delegateToSchema } from '@graphql-tools/delegate';
 import { RenameTypes, RenameRootFields } from '@graphql-tools/wrap';
@@ -12,39 +12,15 @@ export const config = {
   },
 };
 
-// Our local schema with cart information
-let cart = [];
-
-let localSchema = makeExecutableSchema({
-  typeDefs: `
-  type Query {
-    cart: [Product]!
-  }
-  type Product {
-    id: ID!
-    name: String!
-  }
-  `,
-  resolvers: {
-    Query: {
-      cart() {
-        return cart;
-      },
-    },
-  },
-});
-
 // Export as a Next.js API Route
 export default async (req, res) => {
   // Setup subschema configurations
-  const localSubschema = { schema: localSchema };
-
   const productsSubschema = await createRemoteSchema({
-    url: 'https://demo.saleor.io/graphql/',
+    url: process.env.NEXT_PUBLIC_SALEOR_GRAPHQL_ENDPOINT
   });
 
   const cmsSubschema = await createRemoteSchema({
-    url: 'http://localhost:1337/graphql',
+    url: process.env.NEXT_PUBLIC_STRAPI_GRAPHQL_ENDPOINT,
     transforms: [
       new RenameRootFields(
         (operationName, fieldName, fieldConfig) => `strapi_${fieldName}`,
@@ -55,7 +31,7 @@ export default async (req, res) => {
 
   // Build the combined schema and set up the extended schema and resolver
   const schema = stitchSchemas({
-    subschemas: [localSubschema, productsSubschema, cmsSubschema],
+    subschemas: [productsSubschema, cmsSubschema],
     typeDefs: `
     extend type Product {
       cmsMetaData: [Strapi_Products]!
@@ -67,7 +43,7 @@ export default async (req, res) => {
           selectionSet: `{ id }`,
           resolve(product, args, context, info) {
             // Get the data for the extended type from the subschema for Strapi
-            return delegateToSchema({ 
+            return delegateToSchema({
               schema: cmsSubschema,
               operation: 'query',
               fieldName: 'strapi_products',

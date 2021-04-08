@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev-strapi": "yarn --cwd services/cms develop",
-    "dev-nextjs": "yarn next dev",
-    "dev": "concurrently \"yarn dev-strapi\" \"yarn dev-nextjs\"",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
