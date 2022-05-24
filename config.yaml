@@ -1,0 +1,4 @@
+configurationset:
+  - configuration:
+      name: 'strapi'
+      hostname: ''

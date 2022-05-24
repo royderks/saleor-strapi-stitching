@@ -1,0 +1,26 @@
+type CmsContent {
+  description: String
+  saleorId: String
+}
+
+type Product {
+  id: ID!
+  name: String!
+  slug: String!
+  cmsContent: CmsContent
+    @materializer(
+      query: "cmsContent"
+      arguments: [{ name: "saleorId", field: "id" }]
+    )
+}
+
+type Query {
+  product(id: ID, channel: String): Product
+    @graphql(endpoint: "https://demo.saleor.io/graphql/")
+  cmsContent(saleorId: ID): CmsContent
+    @rest(
+      endpoint: "https://$hostname/api/products?filters[saleorId][$eq]=$saleorId"
+      configuration: "strapi"
+      resultroot: "data[].attributes"
+    )
+}
